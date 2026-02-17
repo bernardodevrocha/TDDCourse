@@ -1,4 +1,5 @@
-import { Property } from "./Property"
+import { Property } from "./Property";
+import { DateRange } from "../value_objects/date_range";
 
 describe("Property Entity", () =>{
   it("Deve criar uma instancia de Property com todos os atributos", () => {
@@ -16,15 +17,29 @@ describe("Property Entity", () =>{
     }).toThrow("O nome e obrigatorio!")
   })
 
-  it("deve lancar um erro se o numero maximo de hospedes for 0 ou negativo", () => {
+  it("deve validar o numero de hospedes", () => { 
     expect(() => {
-      new Property('1', 'Casa', 'descricao', 0, 200);
-    }).toThrow("O numero maximo de hospedes deve ser maior que zero!")
+      new Property('1', 'Casa', 'descricao', 6, 200);
+    }).toThrow("A quantidade de hospedes e invalida para o quarto!")
   })
   
   it("deve lancar um erro se o preco for 0 ou negativo", () => {
     expect(() => {
       new Property('1', 'Casa', 'descricao', 3, 0);
     }).toThrow("O preco deve ser maior que 0!")
+  })
+  
+  it("deve lancar um erro se nao existir descricao", () => {
+    expect(() => {
+      new Property('1', 'Casa', '', 1, 0);
+    }).toThrow("A descricao e obrigatoria!")
+  })
+
+  it("nao deve aplicar desconto para estadias menores que 7 noites", () => {
+    const property = new Property("1", "Sitio", "Sitio isolado, bonito e bom pra pesca", 4, 750);
+    const dateRange = new DateRange(new Date("2026-01-10"), new Date("2026-01-15"));
+    const totalPrice = property.calculateTotalPrice(dateRange);
+
+    expect(totalPrice).toBe(3750);
   })
 })

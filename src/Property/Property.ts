@@ -1,4 +1,5 @@
-import { validateProperty } from "../entities/property.validator";
+import { validateProperty } from "../validator/property.validator";
+import { DateRange } from "../value_objects/date_range";
 
 export class Property {
   private readonly id: string;
@@ -35,5 +36,11 @@ export class Property {
 
   getPrice(): number {
     return this.price;
+  }
+
+  calculateTotalPrice(dateRange: DateRange): number {
+    const totalNights = dateRange.getTotalNights();
+    let totalPrice = totalNights * this.getPrice();
+    return totalPrice;
   }
 }

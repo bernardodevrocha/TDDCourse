@@ -1,3 +1,5 @@
+import { DateRange } from "../value_objects/date_range";
+
 export interface PropertyProps {
   id: string;
   name: string;
@@ -21,8 +23,8 @@ export function validateProperty(props: PropertyProps): void{
     throw new Error("A descricao e obrigatoria!");
   }
 
-  if(maxGuest <= 0){
-    throw new Error("O numero maximo de hospedes deve ser maior que zero!");
+  if(maxGuest <= 0 || maxGuest >= 5){
+    throw new Error("A quantidade de hospedes e invalida para o quarto!");
   }
 
   if(price <= 0){
