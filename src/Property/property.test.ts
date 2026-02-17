@@ -42,4 +42,12 @@ describe("Property Entity", () =>{
 
     expect(totalPrice).toBe(3750);
   })
+  
+  it("deve aplicar desconto para estadias de 7 noites ou mais", () => {
+    const property = new Property("1", "Sitio", "Sitio isolado, bonito e bom pra pesca", 2, 100);
+    const dateRange = new DateRange(new Date("2026-01-10"), new Date("2026-01-18"));
+    const totalPrice = property.calculateTotalPrice(dateRange);
+
+    expect(totalPrice).toBe(720);
+  })
 })
