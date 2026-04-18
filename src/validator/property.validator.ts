@@ -1,5 +1,3 @@
-import { DateRange } from "../value_objects/date_range";
-
 export interface PropertyProps {
   id: string;
   name: string;

@@ -1,13 +1,9 @@
+import { Booking } from "../Booking/Booking";
 import { validateProperty } from "../validator/property.validator";
 import { DateRange } from "../value_objects/date_range";
 
 export class Property {
-  private readonly id: string;
-  private readonly name: string;
-  private readonly description: string;
-  private readonly maxGuest: number;
-  private readonly price: number;
-  
+  private readonly Bookings: any[] =[]
   constructor(id: string, name: string, description: string, maxGuest: number, price: number) {
     validateProperty({id, name, description, maxGuest, price})
     
@@ -17,6 +13,11 @@ export class Property {
     this.maxGuest = maxGuest;
     this.price = price;
   }
+  private readonly id: string;
+  private readonly name: string;
+  private readonly description: string;
+  private readonly maxGuest: number;
+  private readonly price: number;
 
   getId(): string {
     return this.id;
@@ -38,6 +39,12 @@ export class Property {
     return this.price;
   }
 
+  validateGuestCount(guestCount: number): void {
+    if (guestCount > this.maxGuest) {
+      throw new Error("A propriedade nao tem capacidade suficiente para o numero de hospedes");
+    }
+  }
+
   calculateTotalPrice(dateRange: DateRange): number {
     const totalNights = dateRange.getTotalNights();
     let totalPrice = totalNights * this.getPrice();
@@ -47,5 +54,21 @@ export class Property {
     }
 
     return totalPrice;
+  }
+
+  isAvailable(dateRange: DateRange): boolean {
+    return !this.Bookings.some(
+      (booking) =>
+        booking.getStatus() === "CONFIRMED" &&
+        booking.getDateRange().overlaps(dateRange)
+    );
+  }
+
+  addBooking(booking: Booking): void {
+    this.Bookings.push(booking);
+  }
+
+  getBookings(): Booking[] {
+    return [...this.Bookings];
   }
 }
