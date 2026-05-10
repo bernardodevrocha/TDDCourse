@@ -1,3 +1,5 @@
+import { RefundRule } from "../cancelation/refund_rule.interface";
+import { refundRuleFactory } from "../cancelation/refund_rule_fatory";
 import { Property } from "../Property/Property";
 import { User } from "../user/User";
 import { DateRange } from "../value_objects/date_range";
@@ -86,12 +88,7 @@ export class Booking{
     const timeDiff = checkInDate.getTime() - currentDate.getTime();
     const daysUntilCheckIn = Math.ceil(timeDiff / (1000 * 3600 *24));    
 
-    if(daysUntilCheckIn >= 7){
-      this.totalPrice = 0;
-    }else if (daysUntilCheckIn >= 1 && daysUntilCheckIn < 7){
-      this.totalPrice *= 0.5;
-    }else{
-      console.log("Erro ao cancelar sua reserva")
-    }
+    const refundRule = refundRuleFactory.getRefundRule(daysUntilCheckIn);
+    this.totalPrice = refundRule.calculateRefund(this.totalPrice);
   }
 }
